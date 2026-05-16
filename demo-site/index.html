@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HumanProof Demo</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0d0d1a;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      color: #e0e0f0;
+    }
+
+    .card {
+      background: #13132a;
+      border: 1px solid #2a2a4a;
+      border-radius: 16px;
+      padding: 48px 40px;
+      max-width: 480px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #6c63ff, #00d4aa);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #a89dff, #00d4aa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      color: #f0f0ff;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: #8888aa;
+      line-height: 1.6;
+      margin-bottom: 36px;
+    }
+
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 36px;
+      text-align: left;
+    }
+
+    .feature {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: #9090bb;
+    }
+
+    .feature-dot {
+      width: 6px;
+      height: 6px;
+      background: #6c63ff;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #6c63ff, #5a52e0);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover { opacity: 0.9; }
+    .btn:active { transform: scale(0.99); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .status-box {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .status-box.show { display: block; }
+
+    .status-box.success {
+      background: rgba(0, 212, 170, 0.1);
+      border: 1px solid rgba(0, 212, 170, 0.3);
+      color: #00d4aa;
+    }
+
+    .status-box.error {
+      background: rgba(255, 80, 80, 0.08);
+      border: 1px solid rgba(255, 80, 80, 0.25);
+      color: #ff6666;
+    }
+
+    .status-box.info {
+      background: rgba(108, 99, 255, 0.08);
+      border: 1px solid rgba(108, 99, 255, 0.2);
+      color: #a89dff;
+    }
+
+    .tx-hash {
+      font-family: monospace;
+      font-size: 12px;
+      color: #8888aa;
+      margin-top: 6px;
+      word-break: break-all;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      background: rgba(108, 99, 255, 0.15);
+      border: 1px solid rgba(108, 99, 255, 0.3);
+      color: #a89dff;
+    }
+
+    .footer {
+      margin-top: 28px;
+      font-size: 12px;
+      color: #444466;
+    }
+
+    .footer a {
+      color: #6c63ff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <div class="logo-icon">🛡</div>
+      <div class="logo-text">HumanProof</div>
+    </div>
+
+    <div class="badge">Midnight ZK · Demo</div>
+
+    <h1>Prove you're human.</h1>
+    <p class="subtitle">
+      One-time identity verification. Zero personal data on-chain.<br>
+      Powered by zero-knowledge proofs on Midnight.
+    </p>
+
+    <div class="feature-list">
+      <div class="feature"><span class="feature-dot"></span> No name, ID number, or biometrics stored</div>
+      <div class="feature"><span class="feature-dot"></span> Nullifier prevents replay attacks</div>
+      <div class="feature"><span class="feature-dot"></span> Works once per domain per day</div>
+    </div>
+
+    <button class="btn" id="verifyBtn" onclick="doVerify()">
+      <span id="btnIcon">✓</span>
+      <span id="btnText">Verify Humanity</span>
+    </button>
+
+    <div class="status-box" id="statusBox">
+      <div id="statusMsg"></div>
+      <div class="tx-hash" id="txHash"></div>
+    </div>
+
+    <div class="footer">
+      Built on <a href="https://midnight.network" target="_blank">Midnight Network</a> ·
+      MLH Hackathon 2026
+    </div>
+  </div>
+
+  <script>
+    function verifyViaEvents() {
+      return new Promise((resolve, reject) => {
+        const requestId = Math.random().toString(36).slice(2);
+        const timeout = setTimeout(() => {
+          document.removeEventListener('humanproof:response', handler);
+          reject(new Error('TIMEOUT'));
+        }, 15000);
+
+        function handler(e) {
+          if (e.detail.requestId !== requestId) return;
+          document.removeEventListener('humanproof:response', handler);
+          clearTimeout(timeout);
+          resolve(e.detail);
+        }
+
+        document.addEventListener('humanproof:response', handler);
+        document.dispatchEvent(new CustomEvent('humanproof:challenge', {
+          detail: { requestId }
+        }));
+      });
+    }
+
+    async function doVerify() {
+      const btn = document.getElementById('verifyBtn');
+      const btnIcon = document.getElementById('btnIcon');
+      const btnText = document.getElementById('btnText');
+      const box = document.getElementById('statusBox');
+      const msg = document.getElementById('statusMsg');
+      const txEl = document.getElementById('txHash');
+
+      // Loading state
+      btn.disabled = true;
+      btnIcon.innerHTML = '<span class="spinner"></span>';
+      btnText.textContent = 'Verifying...';
+      box.className = 'status-box info show';
+      msg.textContent = 'Requesting ZK proof from extension...';
+      txEl.textContent = '';
+
+      try {
+        const result = await verifyViaEvents();
+
+        if (result.ok) {
+          showStatus('success', '✓ Verified! You are human.', result.txHash || '');
+          btn.disabled = false;
+          btnIcon.textContent = '✓';
+          btnText.textContent = 'Verified';
+        } else {
+          const errCode = result.error || '';
+          if (errCode === 'NULLIFIER_ALREADY_USED') {
+            showStatus('error', '⟳ Already verified today on this domain. Come back tomorrow!', '');
+          } else if (errCode === 'NOT_VERIFIED') {
+            showStatus('error', '⚠ Identity not set up. Click the extension icon → "Set up identity".', '');
+          } else if (errCode === 'BRIDGE_OFFLINE') {
+            showStatus('error', '⚠ Bridge server offline. Run: cd bridge-server && npm start', '');
+          } else {
+            showStatus('error', `✗ ${result.message || result.error || 'Verification failed'}`, '');
+          }
+          btn.disabled = false;
+          btnIcon.textContent = '✓';
+          btnText.textContent = 'Try Again';
+        }
+      } catch (err) {
+        if (err.message === 'TIMEOUT') {
+          showStatus('error', '⚠ Extension not detected or not responding. Install HumanProof extension and reload.', '');
+        } else {
+          showStatus('error', `✗ ${err.message || 'Unexpected error'}`, '');
+        }
+        btn.disabled = false;
+        btnIcon.textContent = '✓';
+        btnText.textContent = 'Try Again';
+      }
+    }
+
+    function showStatus(type, message, txHash) {
+      const box = document.getElementById('statusBox');
+      const msg = document.getElementById('statusMsg');
+      const txEl = document.getElementById('txHash');
+      box.className = `status-box ${type} show`;
+      msg.textContent = message;
+      txEl.textContent = txHash ? `TX: ${txHash}` : '';
+    }
+  </script>
+</body>
+</html>

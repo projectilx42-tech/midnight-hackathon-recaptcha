@@ -1,0 +1,11 @@
+pragma language_version >= 0.23;
+
+import CompactStandardLibrary;
+
+export ledger usedNullifiers: Set<Bytes<32>>;
+
+export circuit verify(nullifier: Bytes<32>): [] {
+  const n = disclose(nullifier);
+  assert(usedNullifiers.member(n) == false, "Nullifier already used");
+  usedNullifiers.insert(n);
+}
