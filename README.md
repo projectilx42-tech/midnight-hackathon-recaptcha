@@ -1,3 +1,7 @@
+![Midnight](https://img.shields.io/badge/Built%20on-Midnight-6f42ff)
+![ZK](https://img.shields.io/badge/Zero--Knowledge-Enabled-blue)
+![Hackathon](https://img.shields.io/badge/MLH-Midnight%20Hackathon-purple)
+![Status](https://img.shields.io/badge/Status-Prototype-success)
 # HumanProof — Setup Guide
 
 HumanProof replaces CAPTCHA with zero-knowledge verification. Users verify once locally, then generate anonymous cryptographic proofs proving they are human — without exposing identity, biometrics, or personal data. This guide gets you from zero to a working demo. Privacy-preserving proof-of-humanity built on Midnight Network.
@@ -9,10 +13,10 @@ Built for the AI internet.
 Traditional CAPTCHA systems were designed for the pre-AI internet.
 
 Modern AI systems increasingly bypass human verification systems, enabling:
-- spam,
-- fake accounts,
-- Sybil attacks,
-- and automated abuse at scale.
+- Spam
+- Fake accounts
+- Sybil attacks
+- Automated abuse at scale
 
 HumanProof introduces a privacy-preserving proof-of-humanity layer built for the AI era.
 
@@ -51,11 +55,6 @@ HumanProof never uploads:
 - raw identity data.
 
 Only anonymous nullifiers are submitted to Midnight for replay-resistant verification.
-  
-![Midnight](https://img.shields.io/badge/Built%20on-Midnight-6f42ff)
-![ZK](https://img.shields.io/badge/Zero--Knowledge-Enabled-blue)
-![Hackathon](https://img.shields.io/badge/MLH-Midnight%20Hackathon-purple)
-![Status](https://img.shields.io/badge/Status-Prototype-success)
 
 ## What you need (prerequisites)
 
