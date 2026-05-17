@@ -1,8 +1,61 @@
 # HumanProof — Setup Guide
 
-ZK-powered human verification built on Midnight Network. This guide gets you from zero to a working demo.
+HumanProof replaces CAPTCHA with zero-knowledge verification. Users verify once locally, then generate anonymous cryptographic proofs proving they are human — without exposing identity, biometrics, or personal data. This guide gets you from zero to a working demo. Privacy-preserving proof-of-humanity built on Midnight Network.
 
+Built for the AI internet.
 ---
+## The Problem
+
+Traditional CAPTCHA systems were designed for the pre-AI internet.
+
+Modern AI systems increasingly bypass human verification systems, enabling:
+- spam,
+- fake accounts,
+- Sybil attacks,
+- and automated abuse at scale.
+
+HumanProof introduces a privacy-preserving proof-of-humanity layer built for the AI era.
+
+## Why Midnight?
+
+HumanProof requires a verification layer that can confirm proof uniqueness without exposing user identity.
+
+Traditional blockchains are transparent by default, making them unsuitable for privacy-sensitive identity systems. Storing identity data, verification history, or user metadata publicly would undermine the core goal of private proof-of-humanity.
+
+Midnight enables HumanProof to:
+- register anonymous nullifiers without revealing personal identity,
+- prevent replay attacks through private on-chain uniqueness checks,
+- separate verification from identity disclosure,
+- support privacy-preserving human verification for AI-era applications.
+
+In HumanProof, the browser extension generates proofs locally on-device, while Midnight acts as the decentralized trust layer that validates proof uniqueness without learning who the user is.
+
+Only anonymous cryptographic nullifiers are submitted to the network — no government IDs, biometrics, names, or personal information ever appear on-chain.
+
+## Features
+
+- 🔒 Privacy-first proof-of-humanity
+- 🧠 AI-resistant verification model
+- 🛡 Replay attack protection
+- ⚡ Fast local proof generation
+- 🕶 No biometrics stored
+- 🌐 Midnight-powered verification
+- 🧩 Browser extension integration
+  
+## Security Model
+
+HumanProof never uploads:
+- government IDs,
+- biometrics,
+- secret keys,
+- raw identity data.
+
+Only anonymous nullifiers are submitted to Midnight for replay-resistant verification.
+  
+![Midnight](https://img.shields.io/badge/Built%20on-Midnight-6f42ff)
+![ZK](https://img.shields.io/badge/Zero--Knowledge-Enabled-blue)
+![Hackathon](https://img.shields.io/badge/MLH-Midnight%20Hackathon-purple)
+![Status](https://img.shields.io/badge/Status-Prototype-success)
 
 ## What you need (prerequisites)
 
