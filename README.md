@@ -162,6 +162,45 @@ cd ~/midnight-hackathon-recaptcha/bridge-server && source ~/.nvm/nvm.sh && npm s
 
 ---
 
+## Running on Linux or Mac (no WSL)
+
+The project works natively on Linux and Mac — you just can't use `start.ps1`. Open 4 terminal windows and run each manually:
+
+**Terminal 1 — Docker stack:**
+```bash
+cd ~/midnight-hackathon-recaptcha/bridge-server
+docker compose -f standalone.yml up
+```
+Wait until you see `starting indexing` before continuing.
+
+**Terminal 2 — Bridge server:**
+```bash
+cd ~/midnight-hackathon-recaptcha/bridge-server
+npm start
+```
+
+**Terminal 3 — Demo site:**
+```bash
+cd ~/midnight-hackathon-recaptcha/demo-site
+python3 -m http.server 8080
+```
+
+**Terminal 4 — Next.js landing page:**
+```bash
+cd ~/midnight-hackathon-recaptcha/human-proof-site
+npm run dev -- --port 3001
+```
+
+For the Chrome extension, in Step 8 navigate to:
+```
+/home/<your-username>/midnight-hackathon-recaptcha/humanproof-extension
+```
+(or on Mac: `/Users/<your-username>/midnight-hackathon-recaptcha/humanproof-extension`)
+
+Everything else (Steps 3–9) is the same.
+
+---
+
 ## URLs summary
 
 | URL | What |
