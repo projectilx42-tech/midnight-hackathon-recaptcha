@@ -2,12 +2,15 @@
 ![ZK](https://img.shields.io/badge/Zero--Knowledge-Enabled-blue)
 ![Hackathon](https://img.shields.io/badge/MLH-Midnight%20Hackathon-purple)
 ![Status](https://img.shields.io/badge/Status-Prototype-success)
-# HumanProof — Setup Guide
 
-HumanProof replaces CAPTCHA with zero-knowledge verification. Users verify once locally, then generate anonymous cryptographic proofs proving they are human — without exposing identity, biometrics, or personal data. This guide gets you from zero to a working demo. Privacy-preserving proof-of-humanity built on Midnight Network.
+# HumanProof
+
+HumanProof replaces CAPTCHA with zero-knowledge verification. Users verify once locally, then generate anonymous cryptographic proofs proving they are human — without exposing identity, biometrics, or personal data. Privacy-preserving proof-of-humanity built on Midnight Network.
 
 Built for the AI internet.
+
 ---
+
 ## The Problem
 
 Traditional CAPTCHA systems were designed for the pre-AI internet.
@@ -38,14 +41,14 @@ Only anonymous cryptographic nullifiers are submitted to the network — no gove
 
 ## Features
 
-- 🔒 Privacy-first proof-of-humanity
-- 🧠 AI-resistant verification model
-- 🛡 Replay attack protection
-- ⚡ Fast local proof generation
-- 🕶 No biometrics stored
-- 🌐 Midnight-powered verification
-- 🧩 Browser extension integration
-  
+- Privacy-first proof-of-humanity
+- AI-resistant verification model
+- Replay attack protection via on-chain nullifiers
+- Fast local proof generation
+- No biometrics stored
+- Midnight-powered verification
+- Browser extension integration
+
 ## Security Model
 
 HumanProof never uploads:
@@ -56,49 +59,54 @@ HumanProof never uploads:
 
 Only anonymous nullifiers are submitted to Midnight for replay-resistant verification.
 
-## What you need (prerequisites)
+---
 
-- **Windows 10/11** with WSL2 enabled
-- **Ubuntu** installed from the Microsoft Store
-- **Docker Desktop** for Windows
+# Setup Guide
+
+One command gets the whole demo running.
+
+## Prerequisites
+
+- **Ubuntu 22.04+** (or any modern Linux distro)
+- **Docker** with Docker Compose v2 plugin
+- **Node.js 22+**
+- **Python 3** (usually pre-installed on Ubuntu)
 - **Google Chrome**
-- **Node.js** (installed inside WSL — instructions below)
-
-If you're not sure whether you have something, the instructions below will tell you how to install it.
 
 ---
 
-## Step 1 — Enable WSL2 and install Ubuntu
+## Step 1 — Install Docker
 
-If you already have Ubuntu running in WSL, skip to Step 2.
-
-1. Open **PowerShell as Administrator** and run:
-   ```powershell
-   wsl --install
-   ```
-2. Restart your computer when prompted.
-3. After restart, **Ubuntu** will open automatically. Set a username and password.
-
----
-
-## Step 2 — Install Docker Desktop
-
-1. Download Docker Desktop from **https://www.docker.com/products/docker-desktop/**
-2. Install it and start it.
-3. During setup (or after) go to:
-   **Settings → Resources → WSL Integration → turn on Ubuntu → Apply & Restart**
-
-To verify it works, open Ubuntu and run:
 ```bash
-docker ps
+# Add Docker's official GPG key and repository
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
+  https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 ```
-It should show an empty table (no error).
+
+Allow running Docker without `sudo`:
+```bash
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+Verify:
+```bash
+docker run hello-world
+```
 
 ---
 
-## Step 3 — Install Node.js inside WSL
-
-Open **Ubuntu** and run these commands one by one:
+## Step 2 — Install Node.js 22
 
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
@@ -114,20 +122,11 @@ node --version   # should say v22.x.x
 
 ---
 
-## Step 4 — Clone the repository
+## Step 3 — Clone and install
 
-In Ubuntu:
 ```bash
-cd ~
 git clone https://github.com/projectilx42-tech/midnight-hackathon-recaptcha.git
 cd midnight-hackathon-recaptcha
-```
-
----
-
-## Step 5 — Install dependencies
-
-```bash
 npm install
 cd bridge-server && npm install && cd ..
 cd human-proof-site && npm install && cd ..
@@ -135,128 +134,121 @@ cd human-proof-site && npm install && cd ..
 
 ---
 
-## Step 6 — Install Windows Terminal (optional but recommended)
+## Step 4 — Start everything
 
-The startup script opens tabs automatically. It needs **Windows Terminal** from the Microsoft Store:
-**https://aka.ms/terminal**
-
----
-
-## Step 7 — Start everything
-
-Open **PowerShell** (not Ubuntu) and run:
-
-```powershell
-cd \\wsl$\Ubuntu\home\<your-username>\midnight-hackathon-recaptcha
-.\start.ps1
+```bash
+./start.sh
 ```
 
-Replace `<your-username>` with your Ubuntu username (the one you set in Step 1).
+This runs all services in one terminal with colored output:
 
-This opens 4 terminal tabs:
-| Tab | What it does | Ready when you see |
-|---|---|---|
-| Docker Stack | Runs the Midnight blockchain | `starting indexing` in logs |
-| Bridge Server | Connects extension to blockchain | `✓ Ready` |
-| Demo Site | Static demo page on port 8080 | Immediately |
-| Human Proof Site | Next.js landing page on port 3001 | `✓ Ready in Xms` |
+| Label | Service | Port | Ready when |
+|-------|---------|------|------------|
+| `[DOCKER]` | Midnight blockchain + indexer + proof server | 9944, 8088, 6300 | Health checks pass |
+| `[BRIDGE]` | Bridge server (connects extension to chain) | 3000 | `✓ Ready` in output |
+| `[DEMO]` | Static demo page | 8080 | Immediately |
+| `[NEXTJS]` | Next.js landing page | 3001 | `✓ Ready` in output |
 
-**Wait for Bridge Server to print `✓ Ready` before testing — this takes about 60 seconds.**
+The script waits for each service to be healthy before starting the next one.  
+**Bridge server takes ~60 seconds after Docker is healthy** (ZK circuit setup).
+
+Press **Ctrl+C** to stop everything cleanly.
 
 ---
 
-## Step 8 — Install the Chrome extension
+## Step 5 — Install the Chrome extension
 
-1. Open Chrome and go to `chrome://extensions`
-2. Turn on **Developer mode** (toggle in the top right)
+1. Open Chrome → `chrome://extensions`
+2. Turn on **Developer mode** (top right toggle)
 3. Click **Load unpacked**
-4. Select this folder:
-   ```
-   \\wsl$\Ubuntu\home\<your-username>\midnight-hackathon-recaptcha\humanproof-extension
-   ```
-5. The HumanProof extension appears in your toolbar (shield icon)
-6. Click the shield icon → **Set up identity** → upload any photo (or skip) → **Continue**
+4. Select the `humanproof-extension` folder inside the cloned repo
+5. Click the HumanProof shield icon in toolbar → **Set up identity** → upload any photo (or skip) → **Continue**
 
 ---
 
-## Step 9 — Test it
+## Step 6 — Test it
 
 Open **http://localhost:8080** in Chrome.
 
-You should see the verify wall. Click **Verify** — the extension handles the rest. After a few seconds you'll be let through to the demo page.
+You'll see the verify wall. Click **Verify** — the extension generates a ZK proof and sends it to the bridge server. After a moment you'll be let through.
 
-Also works at **http://localhost:3001**.
+Also works at **http://localhost:3001** (the landing page).
 
 ---
 
 ## Troubleshooting
 
-**"The system cannot find the file specified" when running start.ps1**
-→ Make sure you're running from PowerShell (not Ubuntu), and the path matches your Ubuntu username.
+**"docker: permission denied"**  
+→ Run `sudo usermod -aG docker $USER`, then log out and back in (or run `newgrp docker`).
 
-**"docker: command not found" in Ubuntu**
-→ Go to Docker Desktop → Settings → Resources → WSL Integration → enable Ubuntu → Apply & Restart.
+**"Cannot connect to Docker daemon"**  
+→ Make sure Docker is running: `sudo systemctl start docker`
 
-**Bridge Server tab closes immediately**
-→ Docker stack isn't ready yet. Wait until the Docker Stack tab shows `starting indexing`, then restart the Bridge Server tab manually:
-```bash
-cd ~/midnight-hackathon-recaptcha/bridge-server && source ~/.nvm/nvm.sh && npm start
-```
+**"node: command not found" or wrong version**  
+→ Source nvm: `source ~/.nvm/nvm.sh` then `nvm use 22`. The start script does this automatically.
 
-**"Extension not detected" when clicking Verify**
-→ Make sure you completed Step 8 and clicked "Set up identity" in the extension popup.
+**Bridge server fails immediately**  
+→ Docker stack not ready yet. The script handles this — if you see it fail, the Docker containers may have an issue. Check `docker ps` to see container status.
 
-**"Already verified today on this domain"**
+**"Extension not detected" when clicking Verify**  
+→ Make sure you loaded the extension (Step 5) and clicked "Set up identity" in the popup.
+
+**"Already verified today on this domain"**  
 → Click the **Unverify** button in the top-right corner of the page, then try again.
 
-**Verify button spins for a long time**
-→ Normal — ZK proof generation takes 30–60 seconds. Just wait.
+**Port already in use**  
+→ Kill the old process: `lsof -ti :3000 | xargs kill` (replace 3000 with the port number).
 
 ---
 
-## Running on Linux or Mac (no WSL)
+## URLs
 
-The project works natively on Linux and Mac — you just can't use `start.ps1`. Open 4 terminal windows and run each manually:
+| URL | What |
+|-----|------|
+| http://localhost:8080 | Demo site (static) |
+| http://localhost:3001 | Landing page (Next.js) |
+| http://localhost:3000/health | Bridge server health check |
 
-**Terminal 1 — Docker stack:**
+---
+
+## Alternative: Manual startup (without start.sh)
+
+If you prefer separate terminals:
+
+**Terminal 1 — Docker:**
 ```bash
-cd ~/midnight-hackathon-recaptcha/bridge-server
-docker compose -f standalone.yml up
+cd bridge-server && docker compose -f standalone.yml up
 ```
-Wait until you see `starting indexing` before continuing.
 
-**Terminal 2 — Bridge server:**
+**Terminal 2 — Bridge server** (wait for Docker to be healthy first):
 ```bash
-cd ~/midnight-hackathon-recaptcha/bridge-server
-npm start
+cd bridge-server && npx tsx src/server.ts
 ```
 
 **Terminal 3 — Demo site:**
 ```bash
-cd ~/midnight-hackathon-recaptcha/demo-site
-python3 -m http.server 8080
+cd demo-site && python3 -m http.server 8080
 ```
 
-**Terminal 4 — Next.js landing page:**
+**Terminal 4 — Landing page:**
 ```bash
-cd ~/midnight-hackathon-recaptcha/human-proof-site
-npm run dev -- --port 3001
+cd human-proof-site && npx next dev --port 3001
 ```
-
-For the Chrome extension, in Step 8 navigate to:
-```
-/home/<your-username>/midnight-hackathon-recaptcha/humanproof-extension
-```
-(or on Mac: `/Users/<your-username>/midnight-hackathon-recaptcha/humanproof-extension`)
-
-Everything else (Steps 3–9) is the same.
 
 ---
 
-## URLs summary
+## Alternative: Running on Windows (WSL)
 
-| URL | What |
-|---|---|
-| http://localhost:8080 | Demo site |
-| http://localhost:3001 | Landing page (Next.js) |
-| http://localhost:3000/health | Bridge server health check |
+If you're on Windows, run via WSL2:
+
+1. Install WSL2: `wsl --install` in PowerShell (as admin), restart
+2. Install Docker Desktop → Settings → Resources → WSL Integration → enable Ubuntu
+3. Install Node.js inside WSL (same as Step 2)
+4. Clone and install inside WSL (same as Step 3)
+5. Run `./start.sh` inside WSL terminal
+
+Or use the PowerShell launcher (opens Windows Terminal tabs):
+```powershell
+cd \\wsl$\Ubuntu\home\<username>\midnight-hackathon-recaptcha
+.\start.ps1
+```
