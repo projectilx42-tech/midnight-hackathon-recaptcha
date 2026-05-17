@@ -41,6 +41,7 @@ chrome.runtime.onInstalled.addListener(async () => {
   }
 });
 
+// MV3 message timeout is 5 minutes — sufficient for ZK proof generation
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   if (msg.type === "VERIFY_HUMAN") {
     handleVerify(msg.domain).then(sendResponse).catch(err => {

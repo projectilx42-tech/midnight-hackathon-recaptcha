@@ -1,142 +1,171 @@
-# HumanProof
+# HumanProof — Setup Guide
 
-A reCAPTCHA replacement built on [Midnight Network](https://midnight.network/) using zero-knowledge proofs.
-
-**MLH Midnight Hackathon 2026**
+ZK-powered human verification built on Midnight Network. This guide gets you from zero to a working demo.
 
 ---
 
-## What it does
+## What you need (prerequisites)
 
-Instead of solving image puzzles, users verify their identity once (e.g. via government ID — mocked in this demo). After that, any website can request a ZK proof that the visitor is a real human. The proof is a **nullifier** — a cryptographic value derived from the user's secret key, the domain, and today's date. It gets registered on-chain, so the same person can't verify twice on the same site in one day.
+- **Windows 10/11** with WSL2 enabled
+- **Ubuntu** installed from the Microsoft Store
+- **Docker Desktop** for Windows
+- **Google Chrome**
+- **Node.js** (installed inside WSL — instructions below)
 
-No name, ID number, or biometrics ever leave the user's device or appear on-chain.
+If you're not sure whether you have something, the instructions below will tell you how to install it.
 
-## Architecture
+---
 
+## Step 1 — Enable WSL2 and install Ubuntu
+
+If you already have Ubuntu running in WSL, skip to Step 2.
+
+1. Open **PowerShell as Administrator** and run:
+   ```powershell
+   wsl --install
+   ```
+2. Restart your computer when prompted.
+3. After restart, **Ubuntu** will open automatically. Set a username and password.
+
+---
+
+## Step 2 — Install Docker Desktop
+
+1. Download Docker Desktop from **https://www.docker.com/products/docker-desktop/**
+2. Install it and start it.
+3. During setup (or after) go to:
+   **Settings → Resources → WSL Integration → turn on Ubuntu → Apply & Restart**
+
+To verify it works, open Ubuntu and run:
+```bash
+docker ps
 ```
-Demo Site (localhost:8080)
-    ↓  humanproof:challenge  (CustomEvent)
-Browser Extension  (content script)
-    ↓  POST /verify  { nullifier, domain }
-Bridge Server  (Node.js + Express, localhost:3000)
-    ↓  contract.callTx.verify(nullifierBytes)
-Midnight Smart Contract  (standalone Docker network)
+It should show an empty table (no error).
+
+---
+
+## Step 3 — Install Node.js inside WSL
+
+Open **Ubuntu** and run these commands one by one:
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+source ~/.bashrc
+nvm install 22
+nvm use 22
 ```
 
-## Project structure
-
-```
-midnight-hackathon-recaptcha/
-├── contract/                  # Compact smart contract (nullifier registry)
-│   └── src/humanproof.compact
-├── bridge-server/             # Node.js bridge between extension and Midnight
-│   ├── src/server.ts          # Express API
-│   ├── src/midnight.ts        # Midnight SDK integration
-│   └── standalone.yml         # Docker stack (node + indexer + proof-server)
-├── demo-site/                 # Static HTML demo page
-│   └── index.html
-├── humanproof-extension/      # Browser extension source (separate repo / zip)
-└── start.ps1                  # One-click startup script (Windows)
+Verify:
+```bash
+node --version   # should say v22.x.x
 ```
 
 ---
 
-## Prerequisites
+## Step 4 — Clone the repository
 
-- **Windows** with WSL2 (Ubuntu)
-- **Node.js v22** via nvm in WSL (`source ~/.nvm/nvm.sh`)
-- **Docker Desktop** (with WSL2 backend enabled)
-- **Compact toolchain 0.31** in WSL:
-  ```bash
-  curl --proto '=https' --tlsv1.2 -LsSf https://github.com/midnightntwrk/compact/releases/latest/download/compact-installer.sh | sh
-  source $HOME/.local/bin/env
-  compact update 0.31.0
-  ```
-- **Chrome** (for the extension)
+In Ubuntu:
+```bash
+cd ~
+git clone https://github.com/projectilx42-tech/midnight-hackathon-recaptcha.git
+cd midnight-hackathon-recaptcha
+```
 
 ---
 
-## Quick start
+## Step 5 — Install dependencies
 
-### Option A — one click (Windows Terminal required)
+```bash
+npm install
+cd bridge-server && npm install && cd ..
+cd human-proof-site && npm install && cd ..
+```
+
+---
+
+## Step 6 — Install Windows Terminal (optional but recommended)
+
+The startup script opens tabs automatically. It needs **Windows Terminal** from the Microsoft Store:
+**https://aka.ms/terminal**
+
+---
+
+## Step 7 — Start everything
+
+Open **PowerShell** (not Ubuntu) and run:
 
 ```powershell
+cd \\wsl$\Ubuntu\home\<your-username>\midnight-hackathon-recaptcha
 .\start.ps1
 ```
 
-Opens 3 tabs automatically in the right order. Wait ~60s for the bridge server to print `✓ Ready`.
+Replace `<your-username>` with your Ubuntu username (the one you set in Step 1).
 
-### Option B — manual (3 WSL terminals)
+This opens 4 terminal tabs:
+| Tab | What it does | Ready when you see |
+|---|---|---|
+| Docker Stack | Runs the Midnight blockchain | `starting indexing` in logs |
+| Bridge Server | Connects extension to blockchain | `✓ Ready` |
+| Demo Site | Static demo page on port 8080 | Immediately |
+| Human Proof Site | Next.js landing page on port 3001 | `✓ Ready in Xms` |
 
-**Terminal 1 — Docker stack:**
-```bash
-cd /home/matej/midnight-hackathon-recaptcha/bridge-server
-docker compose -f standalone.yml up
-```
-Wait until you see `starting indexing` in the indexer logs before continuing.
-
-**Terminal 2 — Bridge server:**
-```bash
-source ~/.nvm/nvm.sh
-cd /home/matej/midnight-hackathon-recaptcha/bridge-server
-npm start
-```
-Wait for: `✓ Ready. Accepting requests on POST http://localhost:3000/verify`
-
-**Terminal 3 — Demo site:**
-```bash
-cd /home/matej/midnight-hackathon-recaptcha/demo-site
-python3 -m http.server 8080
-```
+**Wait for Bridge Server to print `✓ Ready` before testing — this takes about 60 seconds.**
 
 ---
 
-## Load the extension in Chrome
+## Step 8 — Install the Chrome extension
 
-1. Go to `chrome://extensions`
-2. Enable **Developer mode** (top right toggle)
+1. Open Chrome and go to `chrome://extensions`
+2. Turn on **Developer mode** (toggle in the top right)
 3. Click **Load unpacked**
-4. Select the `humanproof-extension` folder
-5. Click the extension icon → **"Set up identity"**
-
-Then open `http://localhost:8080` and click **Verify Humanity**.
+4. Select this folder:
+   ```
+   \\wsl$\Ubuntu\home\<your-username>\midnight-hackathon-recaptcha\humanproof-extension
+   ```
+5. The HumanProof extension appears in your toolbar (shield icon)
+6. Click the shield icon → **Set up identity** → upload any photo (or skip) → **Continue**
 
 ---
 
-## Building the smart contract
+## Step 9 — Test it
 
-If you change `contract/src/humanproof.compact`, recompile and rebuild:
+Open **http://localhost:8080** in Chrome.
 
+You should see the verify wall. Click **Verify** — the extension handles the rest. After a few seconds you'll be let through to the demo page.
+
+Also works at **http://localhost:3001**.
+
+---
+
+## Troubleshooting
+
+**"The system cannot find the file specified" when running start.ps1**
+→ Make sure you're running from PowerShell (not Ubuntu), and the path matches your Ubuntu username.
+
+**"docker: command not found" in Ubuntu**
+→ Go to Docker Desktop → Settings → Resources → WSL Integration → enable Ubuntu → Apply & Restart.
+
+**Bridge Server tab closes immediately**
+→ Docker stack isn't ready yet. Wait until the Docker Stack tab shows `starting indexing`, then restart the Bridge Server tab manually:
 ```bash
-source ~/.nvm/nvm.sh
-cd /home/matej/midnight-hackathon-recaptcha/contract
-compact compile src/humanproof.compact src/managed/humanproof
-npm run build
-npm run test
+cd ~/midnight-hackathon-recaptcha/bridge-server && source ~/.nvm/nvm.sh && npm start
 ```
 
+**"Extension not detected" when clicking Verify**
+→ Make sure you completed Step 8 and clicked "Set up identity" in the extension popup.
+
+**"Already verified today on this domain"**
+→ Click the **Unverify** button in the top-right corner of the page, then try again.
+
+**Verify button spins for a long time**
+→ Normal — ZK proof generation takes 30–60 seconds. Just wait.
+
 ---
 
-## Known limitations
+## URLs summary
 
-### Bridge server runs locally — only works for the demo presenter
-
-The extension always connects to `http://localhost:3000`. This means:
-
-- ✅ **Works:** You open any website (including one hosted on the internet) on your own machine — the extension finds your local bridge server and everything works.
-- ❌ **Doesn't work:** Someone else opens your demo site on their machine — their extension looks for `localhost:3000` on *their* computer, where no bridge is running.
-
-In a real product, the bridge server would be bundled as part of a local desktop app or browser extension (similar to how MetaMask embeds a wallet locally). Every user would run their own bridge.
-
-### "Verify on this site" button in the extension popup is redundant
-
-The popup has a manual "Verify on this site" button. This is unnecessary for normal use — when a website requests verification, the extension handles it automatically in the background via the `humanproof:challenge` CustomEvent. The button is only useful for manual testing without a demo page.
-
-### Proof generation takes 30–60 seconds
-
-ZK proof generation on the proof-server is slow. The extension has a 15-second timeout, so the bridge uses an **optimistic response** pattern: it validates the nullifier locally (in-memory set), returns success immediately, then submits the transaction to Midnight asynchronously in the background. This means the HTTP response comes back fast, but the on-chain confirmation happens later.
-
-### Identity verification is mocked
-
-Clicking "Set up identity" in the extension just sets a `verified: true` flag in local storage. In a real version, this step would involve scanning a government ID through a trusted third-party verification service before the flag is set.
+| URL | What |
+|---|---|
+| http://localhost:8080 | Demo site |
+| http://localhost:3001 | Landing page (Next.js) |
+| http://localhost:3000/health | Bridge server health check |

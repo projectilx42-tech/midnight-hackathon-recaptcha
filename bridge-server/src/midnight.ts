@@ -259,16 +259,14 @@ export const verifyNullifier = async (nullifierHex: string): Promise<string> => 
     throw new Error('Nullifier already used');
   }
 
-  // Optimistic: mark as used locally immediately
   usedNullifiersLocal.add(nullifierHex);
 
   const nullifierBytes = Buffer.from(nullifierHex, 'hex');
 
-  // Submit to chain asynchronously — don't block the HTTP response
+  // Submit to chain async — ZK proof generation takes 30-60s, too slow to await in HTTP response
   deployedContract.callTx.verify(nullifierBytes).then((result) => {
-    console.log(`  ✓ Nullifier submitted on-chain, tx: ${result.public.txId}`);
+    console.log(`  ✓ Nullifier confirmed on-chain, tx: ${result.public.txId}`);
   }).catch((err: Error) => {
-    // If on-chain fails (e.g. duplicate from another server instance), remove from local set
     console.error(`  ✗ On-chain verify failed: ${err.message}`);
     usedNullifiersLocal.delete(nullifierHex);
   });

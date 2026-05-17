@@ -66,7 +66,44 @@
     <p class="fine-print">No name, ID number, or biometrics stored on-chain. Ever.</p>
   </div>
 
-  <!-- SCREEN 2: Verified / Ready -->
+  <!-- SCREEN 2: ID Upload -->
+  <div id="screen-id-upload" class="screen">
+    <div class="topbar">
+      <div class="topbar-logo">
+        <div class="logo-dot"></div>
+        <span>HumanProof</span>
+      </div>
+    </div>
+
+    <h1 class="title" style="font-size:26px;margin-bottom:8px;">Scan your<br/><em>ID.</em></h1>
+    <p class="subtitle">Your ID is processed locally. Nothing is uploaded or stored.</p>
+
+    <div class="id-drop-zone" id="id-drop-zone">
+      <div class="id-drop-inner">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect x="4" y="6" width="24" height="20" rx="3" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="11" cy="13" r="2.5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M4 22L10 17L14 20L19 15L28 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p class="drop-label" id="drop-label">Drop your ID photo here</p>
+        <p class="drop-sub">or <label class="drop-browse" for="id-file-input">browse files</label></p>
+        <input type="file" id="id-file-input" accept="image/*" style="display:none"/>
+      </div>
+    </div>
+
+    <p class="id-skip-note">You can skip this step for the demo.</p>
+
+    <button class="btn-primary" id="btn-id-continue">
+      <span>Continue</span>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <p class="fine-print">No biometrics or ID data ever leave your device.</p>
+  </div>
+
+  <!-- SCREEN 3: Verified / Ready -->
   <div id="screen-verified" class="screen">
     <div class="topbar">
       <div class="topbar-logo">
@@ -93,15 +130,6 @@
       <span class="domain-label">CURRENT SITE</span>
       <span class="domain-value" id="current-domain">—</span>
     </div>
-
-    <button class="btn-primary" id="btn-verify">
-      <span id="btn-verify-text">Verify on this site</span>
-      <svg id="btn-verify-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-          stroke-linejoin="round" />
-      </svg>
-      <div id="btn-spinner" class="spinner hidden"></div>
-    </button>
 
     <!-- Result states -->
     <div id="result-success" class="result-box success hidden">
