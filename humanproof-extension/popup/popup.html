@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HumanProof</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+
+<body>
+
+  <!-- SCREEN 1: Unverified / Setup -->
+
+  <div id="screen-setup" class="screen active">
+    <div class="topbar">
+      <div class="topbar-logo">
+        <div class="logo-dot"></div>
+        <span>HumanProof</span>
+      </div>
+    </div>
+
+    <div class="badge">
+      <div class="badge-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <path d="M14 2L3 7V14C3 19.55 7.84 24.74 14 26C20.16 24.74 25 19.55 25 14V7L14 2Z" stroke="currentColor"
+            stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M10 14L13 17L19 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+      <span class="badge-label">NOT VERIFIED</span>
+    </div>
+
+    <h1 class="title">Prove you're<br /><em>human.</em></h1>
+    <p class="subtitle">Scan your government ID once. No data leaves your device. A ZK proof does the rest.</p>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">01</span>
+        <span class="step-text">Scan your ID locally</span>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <span class="step-text">ZK proof published to Midnight</span>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <span class="step-text">Verify anywhere, instantly</span>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="btn-setup">
+      <span>Set up identity</span>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+    </button>
+
+    <p class="fine-print">No name, ID number, or biometrics stored on-chain. Ever.</p>
+  </div>
+
+  <!-- SCREEN 2: Verified / Ready -->
+  <div id="screen-verified" class="screen">
+    <div class="topbar">
+      <div class="topbar-logo">
+        <div class="logo-dot"></div>
+        <span>HumanProof</span>
+      </div>
+    </div>
+
+    <div class="badge verified">
+      <div class="badge-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <path d="M14 2L3 7V14C3 19.55 7.84 24.74 14 26C20.16 24.74 25 19.55 25 14V7L14 2Z" fill="currentColor"
+            fill-opacity="0.15" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M10 14L13 17L19 11" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+      <span class="badge-label">VERIFIED HUMAN</span>
+    </div>
+
+    <h1 class="title">You're<br /><em>verified.</em></h1>
+
+    <div class="domain-card">
+      <span class="domain-label">CURRENT SITE</span>
+      <span class="domain-value" id="current-domain">—</span>
+    </div>
+
+    <button class="btn-primary" id="btn-verify">
+      <span id="btn-verify-text">Verify on this site</span>
+      <svg id="btn-verify-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+      <div id="btn-spinner" class="spinner hidden"></div>
+    </button>
+
+    <!-- Result states -->
+    <div id="result-success" class="result-box success hidden">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5" />
+        <path d="M6 9L8 11L12 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+      <div>
+        <p class="result-title">Human confirmed</p>
+        <p class="result-sub" id="result-nullifier"></p>
+      </div>
+    </div>
+
+    <div id="result-error" class="result-box error hidden">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5" />
+        <path d="M9 5V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        <circle cx="9" cy="13" r="0.5" fill="currentColor" stroke="currentColor" />
+      </svg>
+      <div>
+        <p class="result-title">Verification failed</p>
+        <p class="result-sub" id="result-error-msg"></p>
+      </div>
+    </div>
+
+    <div class="footer-row">
+      <button class="btn-ghost" id="btn-reset">Reset identity</button>
+      <span class="powered-by">Midnight ZK</span>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: Loading -->
+  <div id="screen-loading" class="screen">
+    <div class="topbar">
+      <div class="topbar-logo">
+        <div class="logo-dot"></div>
+        <span>HumanProof</span>
+      </div>
+    </div>
+
+    <div class="loading-wrap">
+      <div class="orbit">
+        <div class="orbit-dot"></div>
+      </div>
+      <p class="loading-text">Initialising...</p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>

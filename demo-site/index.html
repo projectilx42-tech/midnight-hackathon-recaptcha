@@ -9,12 +9,17 @@
 
     body {
       min-height: 100vh;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      color: #e0e0f0;
+      background: #0d0d1a;
+    }
+
+    /* ── WALL (verification screen) ── */
+    #wall {
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #0d0d1a;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      color: #e0e0f0;
     }
 
     .card {
@@ -50,11 +55,24 @@
     .logo-text {
       font-size: 22px;
       font-weight: 700;
-      letter-spacing: -0.5px;
       background: linear-gradient(135deg, #a89dff, #00d4aa);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      background: rgba(108, 99, 255, 0.15);
+      border: 1px solid rgba(108, 99, 255, 0.3);
+      color: #a89dff;
     }
 
     h1 {
@@ -117,43 +135,6 @@
     .btn:active { transform: scale(0.99); }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-    .status-box {
-      margin-top: 20px;
-      padding: 16px;
-      border-radius: 10px;
-      font-size: 14px;
-      line-height: 1.5;
-      display: none;
-    }
-
-    .status-box.show { display: block; }
-
-    .status-box.success {
-      background: rgba(0, 212, 170, 0.1);
-      border: 1px solid rgba(0, 212, 170, 0.3);
-      color: #00d4aa;
-    }
-
-    .status-box.error {
-      background: rgba(255, 80, 80, 0.08);
-      border: 1px solid rgba(255, 80, 80, 0.25);
-      color: #ff6666;
-    }
-
-    .status-box.info {
-      background: rgba(108, 99, 255, 0.08);
-      border: 1px solid rgba(108, 99, 255, 0.2);
-      color: #a89dff;
-    }
-
-    .tx-hash {
-      font-family: monospace;
-      font-size: 12px;
-      color: #8888aa;
-      margin-top: 6px;
-      word-break: break-all;
-    }
-
     .spinner {
       display: inline-block;
       width: 16px;
@@ -166,7 +147,79 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .badge {
+    .footer {
+      margin-top: 28px;
+      font-size: 12px;
+      color: #444466;
+    }
+
+    .footer a { color: #6c63ff; text-decoration: none; }
+
+    /* ── CONTENT PAGE (after verification) ── */
+    #content {
+      display: none;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    #content.visible { display: flex; }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 1px solid #1e1e3a;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #6c63ff, #00d4aa);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .nav-logo-text {
+      font-size: 18px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #a89dff, #00d4aa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .verified-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(0, 212, 170, 0.1);
+      border: 1px solid rgba(0, 212, 170, 0.3);
+      border-radius: 20px;
+      font-size: 13px;
+      color: #00d4aa;
+      font-weight: 600;
+    }
+
+    main {
+      flex: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 80px 40px;
+      width: 100%;
+    }
+
+    .hero-badge {
       display: inline-block;
       padding: 4px 12px;
       border-radius: 20px;
@@ -174,69 +227,246 @@
       font-weight: 600;
       letter-spacing: 0.5px;
       text-transform: uppercase;
+      margin-bottom: 20px;
+      background: rgba(0, 212, 170, 0.1);
+      border: 1px solid rgba(0, 212, 170, 0.25);
+      color: #00d4aa;
+    }
+
+    main h2 {
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      color: #f0f0ff;
+      letter-spacing: -1px;
+    }
+
+    main h2 span {
+      background: linear-gradient(135deg, #a89dff, #00d4aa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .lead {
+      font-size: 18px;
+      color: #8888aa;
+      line-height: 1.7;
+      max-width: 620px;
+      margin-bottom: 60px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 60px;
+    }
+
+    .info-card {
+      background: #13132a;
+      border: 1px solid #2a2a4a;
+      border-radius: 14px;
+      padding: 28px 24px;
+    }
+
+    .info-card .icon {
+      font-size: 28px;
+      margin-bottom: 14px;
+    }
+
+    .info-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #d0d0f0;
+      margin-bottom: 8px;
+    }
+
+    .info-card p {
+      font-size: 14px;
+      color: #7070a0;
+      line-height: 1.6;
+    }
+
+    .comparison {
+      background: #13132a;
+      border: 1px solid #2a2a4a;
+      border-radius: 14px;
+      padding: 32px;
+    }
+
+    .comparison h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #d0d0f0;
       margin-bottom: 24px;
-      background: rgba(108, 99, 255, 0.15);
-      border: 1px solid rgba(108, 99, 255, 0.3);
-      color: #a89dff;
     }
 
-    .footer {
-      margin-top: 28px;
-      font-size: 12px;
-      color: #444466;
+    .compare-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      font-size: 14px;
     }
 
-    .footer a {
-      color: #6c63ff;
-      text-decoration: none;
+    .compare-row.header {
+      font-weight: 700;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6060a0;
+      margin-bottom: 8px;
     }
+
+    .compare-row + .compare-row {
+      border-top: 1px solid #1e1e3a;
+      padding-top: 14px;
+      margin-top: 14px;
+    }
+
+    .compare-row .label { color: #9090bb; }
+    .compare-row .bad { color: #ff6666; }
+    .compare-row .good { color: #00d4aa; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="logo">
-      <div class="logo-icon">🛡</div>
-      <div class="logo-text">HumanProof</div>
-    </div>
 
-    <div class="badge">Midnight ZK · Demo</div>
+  <!-- WALL -->
+  <div id="wall">
+    <div class="card">
+      <div class="logo">
+        <div class="logo-icon">🛡</div>
+        <div class="logo-text">HumanProof</div>
+      </div>
 
-    <h1>Prove you're human.</h1>
-    <p class="subtitle">
-      One-time identity verification. Zero personal data on-chain.<br>
-      Powered by zero-knowledge proofs on Midnight.
-    </p>
+      <div class="badge">Midnight ZK · Demo</div>
 
-    <div class="feature-list">
-      <div class="feature"><span class="feature-dot"></span> No name, ID number, or biometrics stored</div>
-      <div class="feature"><span class="feature-dot"></span> Nullifier prevents replay attacks</div>
-      <div class="feature"><span class="feature-dot"></span> Works once per domain per day</div>
-    </div>
+      <h1>Prove you're human.</h1>
+      <p class="subtitle">
+        One-time identity verification. Zero personal data on-chain.<br>
+        Powered by zero-knowledge proofs on Midnight.
+      </p>
 
-    <button class="btn" id="verifyBtn" onclick="doVerify()">
-      <span id="btnIcon">✓</span>
-      <span id="btnText">Verify Humanity</span>
-    </button>
+      <div class="feature-list">
+        <div class="feature"><span class="feature-dot"></span> No name, ID number, or biometrics stored</div>
+        <div class="feature"><span class="feature-dot"></span> Nullifier prevents replay attacks</div>
+        <div class="feature"><span class="feature-dot"></span> Works once per domain per day</div>
+      </div>
 
-    <div class="status-box" id="statusBox">
-      <div id="statusMsg"></div>
-      <div class="tx-hash" id="txHash"></div>
-    </div>
+      <button class="btn" id="verifyBtn" onclick="doVerify()">
+        <span id="btnIcon">✓</span>
+        <span id="btnText">Verify</span>
+      </button>
 
-    <div class="footer">
-      Built on <a href="https://midnight.network" target="_blank">Midnight Network</a> ·
-      MLH Hackathon 2026
+      <div class="footer">
+        Built on <a href="https://midnight.network" target="_blank">Midnight Network</a> ·
+        MLH Hackathon 2026
+      </div>
     </div>
   </div>
 
+  <!-- CONTENT (after verification) -->
+  <div id="content">
+    <nav>
+      <div class="nav-logo">
+        <div class="nav-logo-icon">🛡</div>
+        <div class="nav-logo-text">HumanProof</div>
+      </div>
+      <div class="verified-pill">✓ Verified Human</div>
+    </nav>
+
+    <main>
+      <div class="hero-badge">You're in</div>
+      <h2>reCAPTCHA is <span>broken</span>.<br>This is what replaces it.</h2>
+      <p class="lead">
+        HumanProof is a zero-knowledge human verification system built on Midnight Network.
+        No tracking, no puzzles, no personal data — just a cryptographic proof that you're human,
+        verified once and never stored.
+      </p>
+
+      <div class="cards-grid">
+        <div class="info-card">
+          <div class="icon">🔒</div>
+          <h3>Zero Personal Data</h3>
+          <p>Nothing about you is stored on-chain. Only a one-time nullifier that prevents reuse.</p>
+        </div>
+        <div class="info-card">
+          <div class="icon">⚡</div>
+          <h3>One Click</h3>
+          <p>No image puzzles, no audio challenges. Verify once per domain per day and move on.</p>
+        </div>
+        <div class="info-card">
+          <div class="icon">🧩</div>
+          <h3>ZK Proof</h3>
+          <p>Backed by zero-knowledge circuits on Midnight. The proof is mathematically unforgeable.</p>
+        </div>
+        <div class="info-card">
+          <div class="icon">🚫</div>
+          <h3>No Replay</h3>
+          <p>Each verification uses a unique nullifier. The same proof cannot be submitted twice.</p>
+        </div>
+      </div>
+
+      <div class="comparison">
+        <h3>HumanProof vs. reCAPTCHA</h3>
+        <div class="compare-row header">
+          <span></span>
+          <span>reCAPTCHA</span>
+          <span>HumanProof</span>
+        </div>
+        <div class="compare-row">
+          <span class="label">User data collected</span>
+          <span class="bad">Yes (IP, behavior)</span>
+          <span class="good">None</span>
+        </div>
+        <div class="compare-row">
+          <span class="label">Verification method</span>
+          <span class="bad">Image puzzles</span>
+          <span class="good">ZK proof</span>
+        </div>
+        <div class="compare-row">
+          <span class="label">Replay protection</span>
+          <span class="bad">Session-based</span>
+          <span class="good">On-chain nullifier</span>
+        </div>
+        <div class="compare-row">
+          <span class="label">Privacy</span>
+          <span class="bad">Tracked by Google</span>
+          <span class="good">Fully anonymous</span>
+        </div>
+      </div>
+    </main>
+  </div>
+
   <script>
-    function verifyViaEvents() {
+    async function doVerify() {
+      const btn = document.getElementById('verifyBtn');
+      const btnIcon = document.getElementById('btnIcon');
+      const btnText = document.getElementById('btnText');
+
+      btn.disabled = true;
+      btnIcon.innerHTML = '<span class="spinner"></span>';
+      btnText.textContent = 'Verifying...';
+
+      try {
+        await verifyViaExtension();
+      } catch (_) {
+        // Demo fallback: extension not present, just animate through
+      }
+
+      // Brief pause so the loading state is visible
+      await new Promise(r => setTimeout(r, 800));
+      showContent();
+    }
+
+    function verifyViaExtension() {
       return new Promise((resolve, reject) => {
         const requestId = Math.random().toString(36).slice(2);
         const timeout = setTimeout(() => {
           document.removeEventListener('humanproof:response', handler);
           reject(new Error('TIMEOUT'));
-        }, 15000);
+        }, 5000);
 
         function handler(e) {
           if (e.detail.requestId !== requestId) return;
@@ -246,70 +476,14 @@
         }
 
         document.addEventListener('humanproof:response', handler);
-        document.dispatchEvent(new CustomEvent('humanproof:challenge', {
-          detail: { requestId }
-        }));
+        document.dispatchEvent(new CustomEvent('humanproof:challenge', { detail: { requestId } }));
       });
     }
 
-    async function doVerify() {
-      const btn = document.getElementById('verifyBtn');
-      const btnIcon = document.getElementById('btnIcon');
-      const btnText = document.getElementById('btnText');
-      const box = document.getElementById('statusBox');
-      const msg = document.getElementById('statusMsg');
-      const txEl = document.getElementById('txHash');
-
-      // Loading state
-      btn.disabled = true;
-      btnIcon.innerHTML = '<span class="spinner"></span>';
-      btnText.textContent = 'Verifying...';
-      box.className = 'status-box info show';
-      msg.textContent = 'Requesting ZK proof from extension...';
-      txEl.textContent = '';
-
-      try {
-        const result = await verifyViaEvents();
-
-        if (result.ok) {
-          showStatus('success', '✓ Verified! You are human.', result.txHash || '');
-          btn.disabled = false;
-          btnIcon.textContent = '✓';
-          btnText.textContent = 'Verified';
-        } else {
-          const errCode = result.error || '';
-          if (errCode === 'NULLIFIER_ALREADY_USED') {
-            showStatus('error', '⟳ Already verified today on this domain. Come back tomorrow!', '');
-          } else if (errCode === 'NOT_VERIFIED') {
-            showStatus('error', '⚠ Identity not set up. Click the extension icon → "Set up identity".', '');
-          } else if (errCode === 'BRIDGE_OFFLINE') {
-            showStatus('error', '⚠ Bridge server offline. Run: cd bridge-server && npm start', '');
-          } else {
-            showStatus('error', `✗ ${result.message || result.error || 'Verification failed'}`, '');
-          }
-          btn.disabled = false;
-          btnIcon.textContent = '✓';
-          btnText.textContent = 'Try Again';
-        }
-      } catch (err) {
-        if (err.message === 'TIMEOUT') {
-          showStatus('error', '⚠ Extension not detected or not responding. Install HumanProof extension and reload.', '');
-        } else {
-          showStatus('error', `✗ ${err.message || 'Unexpected error'}`, '');
-        }
-        btn.disabled = false;
-        btnIcon.textContent = '✓';
-        btnText.textContent = 'Try Again';
-      }
-    }
-
-    function showStatus(type, message, txHash) {
-      const box = document.getElementById('statusBox');
-      const msg = document.getElementById('statusMsg');
-      const txEl = document.getElementById('txHash');
-      box.className = `status-box ${type} show`;
-      msg.textContent = message;
-      txEl.textContent = txHash ? `TX: ${txHash}` : '';
+    function showContent() {
+      document.getElementById('wall').style.display = 'none';
+      const content = document.getElementById('content');
+      content.classList.add('visible');
     }
   </script>
 </body>
