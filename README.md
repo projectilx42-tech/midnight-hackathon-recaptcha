@@ -3,6 +3,8 @@
 ![Hackathon](https://img.shields.io/badge/MLH-Midnight%20Hackathon-purple)
 ![Status](https://img.shields.io/badge/Status-Prototype-success)
 
+This project is built on the Midnight Network.
+
 # HumanProof
 
 HumanProof replaces CAPTCHA with zero-knowledge verification. Users verify once locally, then generate anonymous cryptographic proofs proving they are human — without exposing identity, biometrics, or personal data. Privacy-preserving proof-of-humanity built on Midnight Network.
